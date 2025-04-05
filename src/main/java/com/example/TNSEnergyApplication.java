@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableCaching
-public class ForexApplication {
+public class TNSEnergyApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ForexApplication.class, args);
+        SpringApplication.run(TNSEnergyApplication.class, args);
     }
 }

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>forex</artifactId>
+	<artifactId>TNSEnergy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>forex</name>
 	<description>Spring forex app</description>
