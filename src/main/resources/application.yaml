@@ -10,6 +10,6 @@ spring:
 #    default-schema: challenge_arena
 security:
   jwt:
-    secret: abc
-    access: 3600000
-    refresh: 2592000000
+    secret: ${JWT_SECRET}
+    access: ${JWT_ACCESS_DURATION}
+    refresh: ${JWT_REFRESH_DURATION}
