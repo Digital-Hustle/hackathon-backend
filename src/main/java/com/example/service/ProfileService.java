@@ -1,7 +1,12 @@
 package com.example.service;
 
-import com.example.domain.Profile.History;
+import com.example.domain.Profile.Report;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface ProfileService {
-    History getHistoryById(Long id);
+    List<Report> getReportsByUserId(Long userId);
+
+    Report createReport(Long userId, MultipartFile excelFile);
 }

@@ -5,23 +5,18 @@ spring:
   sockjs:
   enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME}?currentSchema=${DB_SCHEMA}
+    url: jdbc:postgresql://localhost:5439/mydb?currentSchema=${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-    security:
-      oauth2:
-        client:
-          registration:
-            google:
-              client-id: ${GOOGLE_CLIENT_ID}
-              client-secret: ${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}
+
   servlet:
     multipart:
       enabled: true
-      max-file-size: 100MB
+      max-file-size: 10MB
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db.changelog/db.changelog-master.yaml
     default-schema: ${DB_SCHEMA}
 security:
   jwt:
