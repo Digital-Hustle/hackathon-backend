@@ -1,13 +1,23 @@
 spring:
+  config:
+    import: optional:file:.env[.properties]
+
   datasource:
-    url: abc
-    username: abc
-    password: abc
+    url: jdbc:postgresql://localhost:5439/mydb?currentSchema=${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-#  liquibase:
-#    change-log: classpath:/liquibase/changesets/db.changelog.yaml
-#    enabled: true
-#    default-schema: challenge_arena
+
+  sql:
+    init:
+      mode: never
+      continue-on-error: false
+
+  liquibase:
+    change-log: classpath:db.changelog/db.changelog-master.yaml
+    enabled: true
+    default-schema: tns_energy
+
 security:
   jwt:
     secret: ${JWT_SECRET}

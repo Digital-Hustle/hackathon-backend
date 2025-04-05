@@ -1,1 +1,1 @@
-create schema if not exists TNSEnergy;
+create schema if not exists tns_energy;
