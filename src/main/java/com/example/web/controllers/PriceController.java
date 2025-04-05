@@ -2,6 +2,9 @@ package com.example.web.controllers;
 
 
 import com.example.domain.APIResponse.APIResponse;
+import com.example.domain.FileParse.PriceRecord;
+import com.example.service.FileParsingService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 
 @RestController
 @RequestMapping("/api/v1/price")
 @RequiredArgsConstructor
+@Tag(name = "Price Controller", description = "Price API")
 public class PriceController {
 
+    private final FileParsingService fileParsingService;
 
     @PostMapping("/upload")
     public ResponseEntity<APIResponse> upload(@RequestParam("file") MultipartFile file) {
@@ -26,11 +34,17 @@ public class PriceController {
         }
 
         try {
-            APIResponse response = new APIResponse("File uploaded successfully", null);
+            CompletableFuture<List<PriceRecord>> future = fileParsingService.parseExcelFile(file.getInputStream(), file.getOriginalFilename());
+            List<PriceRecord> priceRecords = future.join();
+
+            APIResponse response = new APIResponse("File uploaded successfully", priceRecords);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            APIResponse response = new APIResponse("Error while processing the file: " + e.getMessage(), null);
+            System.out.println("кэтч контролера");
+            e.printStackTrace();
+            APIResponse response = new APIResponse("Error while processing the file", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
+

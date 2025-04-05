@@ -25,6 +25,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -58,17 +63,29 @@ public class ApplicationConfig {
                                 )
                 )
                 .info(new Info()
-                        .title("TNSEnergy API")
+                        .title("TNS API")
                         .description("Spring boot application")
                         .version("1.0")
                 );
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://192.168.180.117:3000", "http://192.168.180.250:3000", "null", "http://localhost:8081", "https://websocketking.com"));  // Разрешить доступ с вашего фронтенда
+        configuration.addAllowedMethod("*");  // Разрешить все методы (GET, POST, PUT, DELETE, и т.д.)
+        configuration.addAllowedHeader("*");  // Разрешить все заголовки
+        configuration.setAllowCredentials(true);  // Разрешить использование cookies и авторизации
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);  // Применить настройки ко всем маршрутам
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
