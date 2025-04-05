@@ -5,6 +5,7 @@ import com.example.domain.user.Role;
 import com.example.domain.user.User;
 import com.example.repository.UserRepository;
 import com.example.service.UserService;
+import liquibase.logging.mdc.customobjects.History;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User create(User user) {
-        if(userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new IllegalStateException("Username already exists");
         }
 
-        if(!user.getPassword().equals(user.getPasswordConfirmation())) {
+        if (!user.getPassword().equals(user.getPasswordConfirmation())) {
             throw new IllegalStateException("Passwords do not match");
         }
 
@@ -67,5 +68,4 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
-
 }
