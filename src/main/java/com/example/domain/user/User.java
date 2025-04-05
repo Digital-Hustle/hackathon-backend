@@ -1,6 +1,5 @@
 package com.example.domain.user;
 
-import com.example.domain.Profile.Profile;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,7 +26,4 @@ public class User implements Serializable {
     @CollectionTable(name = "users_roles")
     @Enumerated(value = EnumType.STRING)
     private Set<Role> roles;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Profile profile;
 }
