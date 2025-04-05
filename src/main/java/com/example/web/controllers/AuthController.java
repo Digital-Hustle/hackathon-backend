@@ -27,11 +27,6 @@ public class AuthController {
 
     private final UserMapper userMapper;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello World";
-    }
-
     @PostMapping("/login")
     public JwtResponse login(@Validated @RequestBody JwtRequest loginRequest) {
         return authService.login(loginRequest);
@@ -40,6 +35,7 @@ public class AuthController {
     @PostMapping("/register")
     public UserDto register(@Validated(OnCreate.class) @RequestBody UserDto userDto) {
         User user = userMapper.toEntity(userDto);
+        System.out.println(user);
         User createdUser = userService.create(user);
         return userMapper.toDto(createdUser);
     }

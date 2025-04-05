@@ -7,10 +7,9 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "profiles")
+@Table(name = "profile")
 @Data
 public class Profile implements Serializable {
-
     @Id
     private long id;
 
@@ -19,9 +18,6 @@ public class Profile implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String name;
-    private int age;
-    private String description;
-    private int sex;
-
+    @OneToOne
+    private History history;
 }
