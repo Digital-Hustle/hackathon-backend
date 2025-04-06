@@ -1,6 +1,6 @@
 package com.example.web.dto.excel;
 
-public class HorlyDataDto {
+public class HourlyDataDto {
     int day;
 
     int hour;

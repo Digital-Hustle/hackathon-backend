@@ -4,10 +4,10 @@ VALUES ('user1', 'hashed_password1'),
        ('admin', 'hashed_admin_password');
 
 INSERT INTO users_roles (user_id, role)
-VALUES (1, 'USER'),
-       (2, 'USER'),
-       (3, 'USER'),
-       (3, 'ADMIN');
+VALUES (1, 'ROLE_USER'),
+       (2, 'ROLE_USER'),
+       (3, 'ROLE_USER'),
+       (3, 'ROLE_ADMIN');
 
 INSERT INTO profile (user_id)
 VALUES (1),
