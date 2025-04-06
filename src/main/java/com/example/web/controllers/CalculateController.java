@@ -2,6 +2,7 @@ package com.example.web.controllers;
 
 import com.example.domain.APIResponse.APIResponse;
 import com.example.service.CalculateService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/api/v1/calculate")
 @RequiredArgsConstructor
+@Tag(name = "Calculate Controller", description = "Calculate API")
 public class CalculateController {
 
     private final CalculateService calculateService;

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Validated
 @Tag(name = "User Controller", description = "User API")
-
 public class UserController {
 
     private final UserService userService;
