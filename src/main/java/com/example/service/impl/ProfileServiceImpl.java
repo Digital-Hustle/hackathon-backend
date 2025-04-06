@@ -4,44 +4,47 @@ import com.example.domain.Profile.Report;
 import com.example.domain.exception.ResourceNotFoundException;
 import com.example.domain.user.User;
 import com.example.repository.ReportRepository;
-import com.example.repository.UserRepository;
 import com.example.service.ProfileService;
+import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ReportRepository reportRepository;
 
 
     @Override
     public List<Report> getReportsByUserId(Long userId) {
-
-        return List.of();
+        return userService.getById(userId).getReports();
     }
 
     @Override
-    public Report createReport(Long userId, MultipartFile excelFile) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+    public Report getReportById(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow(
+                () -> new ResourceNotFoundException("Report not found")
+        );
+    }
 
-        if (excelFile.isEmpty()) {
+    @Override
+    @Transactional
+    public Report createReport(Long userId, MultipartFile excelFile) {
+        User user = userService.getById(userId);
+
+        if (excelFile.isEmpty())
             throw new IllegalArgumentException("Excel file is empty");
-        }
 
         String contentType = excelFile.getContentType();
-        if (!isExcelContentType(contentType)) {
+        if (!isExcelContentType(contentType))
             throw new IllegalArgumentException("Invalid file type. Expected Excel file");
-        }
 
         Report report = new Report();
         try {
@@ -51,9 +54,8 @@ public class ProfileServiceImpl implements ProfileService {
             report.setFileSize(excelFile.getSize());
             report.setContentType(contentType);
 
-            if (user.getReports() != null) {
+            if (user.getReports() != null)
                 user.getReports().add(report);
-            }
 
             return reportRepository.save(report);
         } catch (IOException e) {

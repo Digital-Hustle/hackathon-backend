@@ -8,5 +8,7 @@ import java.util.List;
 public interface ProfileService {
     List<Report> getReportsByUserId(Long userId);
 
+    Report getReportById(Long id);
+
     Report createReport(Long userId, MultipartFile excelFile);
 }

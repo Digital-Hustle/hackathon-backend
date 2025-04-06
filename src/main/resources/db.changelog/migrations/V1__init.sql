@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS report
     user_id      INTEGER   NOT NULL,
     created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     file_name    VARCHAR(255),
-    file_size    BIGINT,
+    file_size    INTEGER,
     content_type VARCHAR(100),
     CONSTRAINT fk_report_user FOREIGN KEY (user_id)
         REFERENCES users (id) ON DELETE CASCADE
