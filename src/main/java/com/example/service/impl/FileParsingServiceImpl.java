@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.domain.FileParse.PriceRecord;
 import com.example.service.FileParsingService;
 import com.example.service.impl.table.TnsTable;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class FileParsingServiceImpl implements FileParsingService {
@@ -74,5 +77,10 @@ public class FileParsingServiceImpl implements FileParsingService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public CompletableFuture<List<PriceRecord>> parseExcelFile(InputStream inputStream, String fileName) {
+        return null;
     }
 }
