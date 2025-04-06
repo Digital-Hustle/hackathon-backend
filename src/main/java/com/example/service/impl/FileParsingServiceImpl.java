@@ -1,8 +1,5 @@
 package com.example.service.impl;
 
-//import com.example.domain.EnergyPriceData.EnergyPriceData;
-//import com.example.domain.PriceCategory.PriceCategory;
-
 import com.example.service.FileParsingService;
 import com.example.service.impl.table.TnsTable;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

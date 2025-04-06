@@ -23,7 +23,7 @@ public class UserFIleParsingServiceImpl implements UserFileParsingService {
 
             try (InputStream inputStream = file.getInputStream();
                  Workbook workbook = WorkbookFactory.create(inputStream)) {
-
+                System.out.println("тут 1");
                 Sheet sheet = workbook.getSheetAt(0);
 
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
@@ -52,12 +52,9 @@ public class UserFIleParsingServiceImpl implements UserFileParsingService {
                         continue;
                     }
 
-                    System.out.println("Мы тут 2");
                     hourlyDataList.add(new HourlyData(day, hour, volume));
-                    System.out.println("Мы тут 3");
                 }
             } catch (Exception e) {
-                System.out.println("ТУТ ЭРОР");
                 throw new RuntimeException("Ошибка при парсинге файла", e);
             }
 
