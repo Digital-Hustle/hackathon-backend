@@ -4,6 +4,7 @@ package com.example.service.impl;
 //import com.example.domain.PriceCategory.PriceCategory;
 
 import com.example.service.FileParsingService;
+import com.example.service.impl.table.TnsTable;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FileParsingServiceImpl implements FileParsingService {
@@ -25,10 +27,10 @@ public class FileParsingServiceImpl implements FileParsingService {
              Workbook workbook = new HSSFWorkbook(fis)) {
             FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 
-            // Получаем первый лист
             Sheet sheet = workbook.getSheetAt(0);
             System.out.println(sheet);
 
+            List<TnsTable> tnsTables = new ArrayList<>();
             List<List<Double>> result = new ArrayList<>();
             for (Row row : sheet) {
                 // Проходим по всем ячейкам строки
@@ -43,79 +45,40 @@ public class FileParsingServiceImpl implements FileParsingService {
                             if (DateUtil.isCellDateFormatted(cell)) {
 //                                System.out.print(cell.getDateCellValue() + ":)\t");
                             } else {
+                                rowData.add(cell.getNumericCellValue());
 //                                System.out.print(cell.getNumericCellValue() + ":(\t");
                             }
                             break;
                         case FORMULA:
                             CellValue cellValue = evaluator.evaluate(cell);
-                            switch (cellValue.getCellType()) {
-                                case NUMERIC:
-//                                    System.out.print(cellValue.getNumberValue() + ":|\t");
-                                    rowData.add(cellValue.getNumberValue());
-                                    break;
+                            if (Objects.requireNonNull(cellValue.getCellType()) == CellType.NUMERIC) {
+                                //                                    System.out.print(cellValue.getNumberValue() + ":|\t");
+                                rowData.add(cellValue.getNumberValue());
                             }
                             break;
                     }
                 }
-//                System.out.println(rowData);
-                result.add(rowData);
-//                System.out.println(); // Переход на новую строку после обработки всех ячеек
+
+                if (rowData.size() == 25)
+                    result.add(rowData);
+
+                if (!rowData.isEmpty() && rowData.get(0) == 31.0) {
+                    TnsTable table = new TnsTable();
+                    table.setData(result);
+                    tnsTables.add(table);
+                    result = new ArrayList<>();
+                }
             }
 
-            result.forEach(System.out::println);
+
+            tnsTables.forEach(table -> {
+                System.out.println("New table");
+                table.getData().forEach(System.out::println);
+            });
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-//
-//    public CompletableFuture<EnergyPriceData> parseAsync(String filePath) {
-//        return CompletableFuture.supplyAsync(() -> {
-//            EnergyPriceData data = new EnergyPriceData();
-//            try (FileInputStream fis = new FileInputStream(new File(filePath));
-//                 Workbook workbook = new XSSFWorkbook(fis)) {
-//
-//                for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets(); sheetIndex++) {
-//                    Sheet sheet = workbook.getSheetAt(sheetIndex);
-//                    processSheet(sheet, data);
-//                }
-//
-//            } catch (Exception e) {
-//                // log.error("Ошибка при парсинге Excel файла", e);
-//                System.out.println("Ошибка при парсинге Excel файла: " + e.getMessage());
-//                throw new RuntimeException("Ошибка при парсинге Excel файла", e);
-//            }
-//            return data;
-//        });
-//    }
-//
-//    private void processSheet(Sheet sheet, EnergyPriceData data) {
-//        sheet.forEach(row -> processRow(row, data));
-//    }
-//
-//    private void processRow(Row row, EnergyPriceData data) {
-//        if (row == null || row.getCell(0) == null) return;
-//
-//        String key = row.getCell(0).getStringCellValue().trim();
-//        if (key.isEmpty()) return;
-//
-//        // Ищем начало раздела (например, "Предельный уровень нерегулируемых цен")
-//        if (key.contains("Предельный уровень")) {
-//            for (int i = 1; i < row.getLastCellNum(); i++) {
-//                String header = row.getCell(i).getStringCellValue().trim();
-//                double value = row.getCell(i + 1).getNumericCellValue();
-//                data.getTransmissionCosts().put(header, value);
-//            }
-//        }
-//
-//        // Ищем почасовые данные
-//        if (key.startsWith("0:00-1:00")) {
-//            for (int i = 1; i < row.getLastCellNum(); i++) {
-//                String timeRange = row.getCell(0).getStringCellValue().trim();
-//                double value = row.getCell(i).getNumericCellValue();
-//                data.getCategories().computeIfAbsent("HourlyData", k -> new PriceCategory("HourlyData"))
-//                        .getEnergyPrices().put(timeRange, value);
-//            }
-//        }
-//    }
 }
