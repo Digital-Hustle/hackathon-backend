@@ -1,23 +1,17 @@
 package com.example.service.impl.table;
 
-import java.util.ArrayList;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class TnsTable {
+    String title;
     List<List<Double>> data;
 
-    public TnsTable() {
-    }
-
-    public TnsTable(List<List<Double>> data) {
-        this.data = data;
-    }
-
-    public List<List<Double>> getData() {
-        return data;
-    }
-
-    public void setData(List<List<Double>> data) {
-        this.data = data;
+    public TnsTable(String title) {
+        this.title = title;
     }
 }

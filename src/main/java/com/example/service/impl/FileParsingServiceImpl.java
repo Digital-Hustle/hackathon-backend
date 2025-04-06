@@ -32,29 +32,25 @@ public class FileParsingServiceImpl implements FileParsingService {
 
             List<TnsTable> tnsTables = new ArrayList<>();
             List<List<Double>> result = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
+
             for (Row row : sheet) {
-                // Проходим по всем ячейкам строки
                 List<Double> rowData = new ArrayList<>();
                 for (Cell cell : row) {
-                    // Выводим значение ячейки в зависимости от её типа
                     switch (cell.getCellType()) {
-//                        case STRING:
-//                            System.out.print(cell.getStringCellValue() + "\t");
-//                            break;
+                        case STRING:
+                            String curStr = cell.getStringCellValue();
+                            if (curStr.contains("ЦЕНОВАЯ КАТЕГОРИЯ")) labels.add(curStr);
+                            break;
                         case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(cell)) {
-//                                System.out.print(cell.getDateCellValue() + ":)\t");
-                            } else {
+                            if (!DateUtil.isCellDateFormatted(cell))
                                 rowData.add(cell.getNumericCellValue());
-//                                System.out.print(cell.getNumericCellValue() + ":(\t");
-                            }
                             break;
                         case FORMULA:
                             CellValue cellValue = evaluator.evaluate(cell);
-                            if (Objects.requireNonNull(cellValue.getCellType()) == CellType.NUMERIC) {
-                                //                                    System.out.print(cellValue.getNumberValue() + ":|\t");
+                            if (Objects.requireNonNull(cellValue.getCellType()) == CellType.NUMERIC)
                                 rowData.add(cellValue.getNumberValue());
-                            }
+
                             break;
                     }
                 }
@@ -63,7 +59,7 @@ public class FileParsingServiceImpl implements FileParsingService {
                     result.add(rowData);
 
                 if (!rowData.isEmpty() && rowData.get(0) == 31.0) {
-                    TnsTable table = new TnsTable();
+                    TnsTable table = new TnsTable(labels.get(labels.size() - 1));
                     table.setData(result);
                     tnsTables.add(table);
                     result = new ArrayList<>();
@@ -71,9 +67,10 @@ public class FileParsingServiceImpl implements FileParsingService {
             }
 
 
-            tnsTables.forEach(table -> {
-                System.out.println("New table");
-                table.getData().forEach(System.out::println);
+//            labels.forEach(System.out::println);
+            tnsTables.forEach(curTable -> {
+                System.out.println(curTable.getTitle());
+                curTable.getData().forEach(System.out::println);
             });
 
 
